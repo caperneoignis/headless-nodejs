@@ -1,4 +1,4 @@
-FROM ubuntu:17.10
+FROM openjdk:8-slim
 
 RUN apt-get update && apt-get install -y curl build-essential git
 
