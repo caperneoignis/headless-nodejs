@@ -23,4 +23,4 @@ RUN chmod a+rwx /home/jenkins
 WORKDIR /home/jenkins
 USER jenkins
 
-ENTRYPOINT ["/opt/bin/entry_point.sh", "/usr/local/bin/jenkins-slave"]
+ENTRYPOINT ["/usr/local/bin/jenkins-slave"]
