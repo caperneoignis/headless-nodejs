@@ -1,8 +1,9 @@
 FROM openjdk:8-slim
 
-RUN apt-get update && apt-get install -y curl build-essential git
-
-RUN curl -sL https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
+RUN apt-get update && apt-get install -y wget curl build-essential git
+# left over command.
+# curl -sL https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
+RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add - && \
     echo "deb https://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list && \
     curl -sL https://deb.nodesource.com/setup_8.x | bash -
 
