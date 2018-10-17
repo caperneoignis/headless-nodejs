@@ -1,4 +1,5 @@
 FROM openjdk:8-slim
+RUN apt-get update && apt-get install -y wget curl build-essential git
 # Jenkins slave piece.
 ARG user=jenkins
 ARG group=jenkins
@@ -29,7 +30,7 @@ VOLUME ${AGENT_WORKDIR}
 WORKDIR /home/${user}
 
 #Chrome and Nodejs piece.
-RUN apt-get update && apt-get install -y wget curl build-essential git
+
 # left over command.
 # curl -sL https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
 RUN wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
