@@ -1,4 +1,4 @@
-# Docker image with headless Chrome and Node 8
+# Docker image with headless Chrome, Jenkins slave, and Node 8
 
 Ideal for running end-to-end integration tests in CI using jenkins and kubernetes.
 
