@@ -1,14 +1,12 @@
-# Docker image with headless Chrome, Firefox and Node 8
+# Docker image with headless Chrome and Node 8
 
-Ideal for running end-to-end integration tests in CI.
+Ideal for running end-to-end integration tests in CI using jenkins and kubernetes.
 
-    docker run -itv $PWD:/tests tamlyn/headless-nodejs
+    docker run -itv $PWD:/tests caperneoignis/headless-nodejs
 
 This will open a bash prompt where you can `npm install && npm test` or whatever.
 
 ## Browsers
-
-Start Firefox with `firefox --headless`.
 
 Start Chrome with `google-chrome --headless --disable-gpu --no-sandbox`.
 
@@ -20,3 +18,7 @@ This is potentially unsafe so you should not use it on untrusted sites.
 ## Other software
 
 Image includes `yarn`, `git` and `build-essential` required for building native NPM modules.
+
+## Kubernetes
+
+If using Kubernetes plugin with Jenkins to run Jenkins slaves, you can input this image as you would openshift containers of the same purpose. This should run the commands as a Jenkins slave would in a normal 'bare-metal' setup. So your Jenkins pipeline files only need to be updated with the associated tag you applied to the container template in the gobal configuration. 
