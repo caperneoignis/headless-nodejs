@@ -1,5 +1,5 @@
 FROM openjdk:8-slim
-
+#Chrome and Nodejs piece.
 RUN apt-get update && apt-get install -y wget curl build-essential git
 # left over command.
 # curl -sL https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
@@ -15,20 +15,34 @@ RUN apt-get install -y nodejs google-chrome-stable
 RUN mkdir /tests
 RUN npm i -g yarn
 
-ARG JENKINS_REMOTING_VERSION=3.27
+# Jenkins slave piece.
+ARG user=jenkins
+ARG group=jenkins
+ARG uid=10000
+ARG gid=10000
 
-# See https://github.com/jenkinsci/docker-slave/blob/master/Dockerfile#L31
-RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/$JENKINS_REMOTING_VERSION/remoting-$JENKINS_REMOTING_VERSION.jar
+ENV HOME /home/${user}
+RUN groupadd -g ${gid} ${group}
+RUN useradd -c "Jenkins user" -d $HOME -u ${uid} -g ${gid} -m ${user}
+
+LABEL Description="This is a base image, which provides the Jenkins agent executable (slave.jar)" Vendor="Jenkins project" Version="3.23"
+
+ARG VERSION=3.26
+ARG AGENT_WORKDIR=/home/${user}/agent
+
+RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar
 RUN chmod 755 /usr/share/jenkins
 RUN chmod 644 /usr/share/jenkins/slave.jar
 
 COPY jenkins-slave /usr/local/bin/jenkins-slave
-
 RUN chmod +x /usr/local/bin/jenkins-slave
 
-RUN mkdir -p /home/jenkins
-RUN chmod a+rwx /home/jenkins
-WORKDIR /home/jenkins
-USER jenkins
+USER ${user}
+ENV AGENT_WORKDIR=${AGENT_WORKDIR}
+RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
+
+VOLUME /home/${user}/.jenkins
+VOLUME ${AGENT_WORKDIR}
+WORKDIR /home/${user}
 
 ENTRYPOINT ["/usr/local/bin/jenkins-slave"]
