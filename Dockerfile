@@ -23,6 +23,7 @@ COPY jenkins-slave /usr/local/bin/jenkins-slave
 RUN chmod +x /usr/local/bin/jenkins-slave
 
 ENV AGENT_WORKDIR=${AGENT_WORKDIR}
+ENV PATH=${PATH}:/usr/local/bin:/usr/bin
 RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
 # Since we are running as root we need to change ownership of directories.
 RUN chown -R jenkins:jenkins /home/${user}
