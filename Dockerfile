@@ -18,12 +18,16 @@ ARG AGENT_WORKDIR=/home/${user}/agent
 RUN curl --create-dirs -sSLo /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${VERSION}/remoting-${VERSION}.jar
 RUN chmod 755 /usr/share/jenkins
 RUN chmod 644 /usr/share/jenkins/slave.jar
-
+RUN chown -R jenkins:jenkins /usr/share/jenkins
 COPY jenkins-slave /usr/local/bin/jenkins-slave
 RUN chmod +x /usr/local/bin/jenkins-slave
 
 ENV AGENT_WORKDIR=${AGENT_WORKDIR}
 RUN mkdir /home/${user}/.jenkins && mkdir -p ${AGENT_WORKDIR}
+# Since we are running as root we need to change ownership of directories.
+RUN chown -R jenkins:jenkins /home/${user}
+RUN chown -R jenkins:jenkins /home/${user}/.jenkins
+RUN chown -R jenkins:jenkins ${AGENT_WORKDIR}
 
 VOLUME /home/${user}/.jenkins
 VOLUME ${AGENT_WORKDIR}
